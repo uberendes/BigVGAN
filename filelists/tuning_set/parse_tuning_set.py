@@ -8,7 +8,7 @@ def get_wav_filelist(data_root, data_type, subsample=1):
     wav_list = sorted(
         [
             path.replace(data_root, "")[1:]
-            for path in glob.glob(os.path.join(data_root, data_type, "**/**/*.wav"))
+            for path in glob.glob(os.path.join(data_root, data_type, "**/**/*.wav"), recursive=True)
         ]
     )
     wav_list = wav_list[::subsample]
@@ -30,6 +30,7 @@ if __name__ == "__main__":
     data_root = "filelists/tuning_set"
 
     data_type_list = ["BPSD", "SWD", "VE"]
+    subsample = [1, 2, 1]
     wav_list_all = []
     for data_type, subsample in data_type_list:
         print(f"processing {data_type}")
@@ -38,14 +39,14 @@ if __name__ == "__main__":
             f"path {data_path} not found. make sure the path is accessible by creating the symbolic link using the following command: "
             f"ln -s /path/to/your/{data_path} {data_path}"
         )
-        wav_list = get_wav_filelist(data_root, data_type)
+        wav_list = get_wav_filelist(data_root, data_type, subsample=subsample)
         write_filelist(os.path.join(data_root, data_type + ".txt"), wav_list)
         wav_list_all.extend(wav_list)
 
     # Split the training set so that the seen speaker validation set contains ~100 utterances
     val_split, train_split = 0.1, 0.9
     assert val_split + train_split == 1, "Val and train split don't add up to one"
-    wav_list_all = random.shuffle(wav_list_all)
+    random.shuffle(wav_list_all)
     n_train_files = int(len(wav_list_all) * train_split)
     wav_list_train, wav_list_val =  wav_list[:n_train_files], wav_list[n_train_files:]
     
