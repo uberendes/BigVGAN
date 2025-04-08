@@ -210,6 +210,9 @@ class MelDataset(torch.utils.data.Dataset):
             self.name = pathlib.Path(self.audio_files[0]).parts[0]
         else:
             self.name = "-".join(pathlib.Path(self.audio_files[0]).parts[:2]).strip("/")
+        
+        if any("nonspeech" in f for f in self.audio_files) and "nonspeech" not in self.name:
+            self.name = self.name + "_" + "nonspeech"
 
         self.segment_size = segment_size
         self.sampling_rate = sampling_rate
