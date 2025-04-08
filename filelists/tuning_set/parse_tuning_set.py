@@ -29,10 +29,10 @@ if __name__ == "__main__":
 
     data_root = "filelists/tuning_set"
 
-    data_type_list = ["BPSD", "SWD", "VE"]
-    subsample = [1, 2, 1]
+    data_type_list = ["BPSD_nonspeech", "BPSD_pitch_shifted_random_nonspeech", "SWD_nonspeech", "SWD_pitch_shifted_random_nonspeech", "VE_nonspeech", "VE_pitch_shifted_random_nonspeech"]
+    subsample = [1,2,1,2,1,2]
     wav_list_all = []
-    for data_type, subsample in data_type_list:
+    for data_type, subsample in zip(data_type_list, subsample):
         print(f"processing {data_type}")
         data_path = os.path.join(data_root, data_type)
         assert os.path.exists(data_path), (
@@ -44,12 +44,15 @@ if __name__ == "__main__":
         wav_list_all.extend(wav_list)
 
     # Split the training set so that the seen speaker validation set contains ~100 utterances
-    val_split, train_split = 0.1, 0.9
+    val_split, train_split = 0.05, 0.95
     assert val_split + train_split == 1, "Val and train split don't add up to one"
     random.shuffle(wav_list_all)
     n_train_files = int(len(wav_list_all) * train_split)
-    wav_list_train, wav_list_val =  wav_list[:n_train_files], wav_list[n_train_files:]
+    print(f"Total number of files found is {len(wav_list_all)}")
     
+    wav_list_train, wav_list_val =  wav_list_all[:n_train_files], wav_list_all[n_train_files:]
+    print(f"Number of training files is: {len(wav_list_train)}")
+    print(f"Number of validation files is: {len(wav_list_val)}")
     write_filelist(os.path.join(data_root, "train-full.txt"), wav_list_train)
     write_filelist(os.path.join(data_root, "val-full.txt"), wav_list_val)
 
