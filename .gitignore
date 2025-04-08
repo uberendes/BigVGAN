@@ -2,6 +2,7 @@
 alias_free_activation/cuda/build/
 exp/
 tmp/
+checkpoints_pretrained/
 
 # Symlinks for bundled LibriTTS filelists
 filelists/LibriTTS/train-clean-100
@@ -12,6 +13,12 @@ filelists/LibriTTS/dev-other
 filelists/LibriTTS/test-clean
 filelists/LibriTTS/test-other
 
+filelists/tuning_set/BPSD_nonspeech
+filelists/tuning_set/BPSD_pitch_shifted_random_nonspeech
+filelists/tuning_set/SWD_nonspeech
+filelists/tuning_set/SWD_pitch_shifted_random_nonspeech
+filelists/tuning_set/VE_nonspeech
+filelists/tuning_set/VE_pitch_shifted_random_nonspeech
 # VSCode configs
 .vscode/
 
